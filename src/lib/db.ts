@@ -102,6 +102,12 @@ export async function savePosts(posts: Post[]): Promise<void> {
     return;
   }
 
+  if (process.env.VERCEL === '1') {
+    throw new Error(
+      "Vercel KV o'rnatilmagan yoki ulanmagan. Iltimos, Vercel Dashboard orqali loyihangizga KV (Redis) ma'lumotlar omborini yarating va ulang."
+    );
+  }
+
   try {
     const data: DatabaseSchema = { posts };
     await fs.writeFile(DB_PATH, JSON.stringify(data, null, 2), 'utf-8');
