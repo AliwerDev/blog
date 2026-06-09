@@ -54,21 +54,7 @@ export default function RootLayout({
       lang="uz"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              try {
-                if (localStorage.getItem('theme') === 'light') {
-                  document.documentElement.classList.add('light');
-                } else {
-                  document.documentElement.classList.remove('light');
-                }
-              } catch (_) {}
-            `,
-          }}
-        />
-      </head>
+      <head />
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );

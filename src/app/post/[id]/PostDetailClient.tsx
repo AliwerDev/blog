@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Edit, Trash2, Loader2 } from 'lucide-react';
-import ThemeToggle from '@/components/ui/ThemeToggle';
 import PostDetailContent from '@/components/blog/PostDetailContent';
 import { deletePostAction } from '@/lib/actions/post-actions';
 import { Post } from '@/types';
@@ -88,7 +87,6 @@ export default function PostDetailClient({ post, isAdmin }: PostDetailClientProp
                   </button>
                 </>
               )}
-              <ThemeToggle />
             </div>
           </div>
 

@@ -3,7 +3,6 @@
 import React from 'react';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
-import ThemeToggle from '@/components/ui/ThemeToggle';
 import PostEditorForm from '@/components/blog/PostEditorForm';
 import { Post } from '@/types';
 
@@ -31,7 +30,6 @@ export default function NewPostClient({ editPost }: NewPostClientProps) {
             <h1 className="text-xl font-bold font-display text-white">
               {editPost ? 'Postni tahrirlash' : 'Yangi post yaratish'}
             </h1>
-            <ThemeToggle />
           </div>
         </div>
 

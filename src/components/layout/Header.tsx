@@ -4,7 +4,6 @@ import React, { useTransition } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Plus, LogOut, Loader2 } from 'lucide-react';
-import ThemeToggle from '@/components/ui/ThemeToggle';
 import { logoutAction } from '@/lib/actions/auth-actions';
 
 interface HeaderProps {
@@ -30,8 +29,8 @@ export default function Header({ isAdmin }: HeaderProps) {
     <header className="flex items-center justify-between py-6 mb-12 border-b border-zinc-800/80">
       <div className="flex items-center gap-6 md:gap-10">
         <Link href="/" className="flex items-center gap-2 group">
-          <span className="text-xl font-bold font-display tracking-tight text-white group-hover:text-purple-400 transition-colors">
-            alisher<span className="text-purple-400 font-normal group-hover:text-white transition-colors">.blog</span>
+          <span className="text-xl font-bold font-display tracking-tight text-[var(--foreground)] group-hover:text-[var(--foreground-dim)] transition-colors">
+            alisher<span className="text-[var(--muted)] font-normal group-hover:text-[var(--foreground-dim)] transition-colors">.blog</span>
           </span>
         </Link>
 
@@ -83,7 +82,6 @@ export default function Header({ isAdmin }: HeaderProps) {
             </button>
           </>
         )}
-        <ThemeToggle />
       </div>
     </header>
   );
