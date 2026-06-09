@@ -28,9 +28,7 @@ async function assertAdmin(): Promise<boolean> {
  * Creates a new video entry
  */
 export async function createVideoAction(data: {
-  title: string;
   youtubeUrl: string;
-  description?: string;
   category?: string;
 }): Promise<ActionResponse<Video>> {
   try {
@@ -39,9 +37,9 @@ export async function createVideoAction(data: {
       return { success: false, error: 'Ruxsat berilmagan. Iltimos, tizimga kiring.' };
     }
 
-    const { title, youtubeUrl, description, category } = data;
-    if (!title || !youtubeUrl) {
-      return { success: false, error: 'Sarlavha va YouTube havola kiritilishi shart.' };
+    const { youtubeUrl, category } = data;
+    if (!youtubeUrl) {
+      return { success: false, error: 'YouTube havola kiritilishi shart.' };
     }
 
     const videoId = getYoutubeId(youtubeUrl);
@@ -50,9 +48,7 @@ export async function createVideoAction(data: {
     }
 
     const newVideo = await createVideo({
-      title,
       youtubeUrl,
-      description: description || '',
       category: category || 'Boshqa',
     });
 

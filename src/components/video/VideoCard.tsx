@@ -9,7 +9,7 @@ interface VideoCardProps {
   video: Video;
   isAdmin: boolean;
   onDelete: (id: string) => Promise<void>;
-  onPlay: (videoId: string, title: string) => void;
+  onPlay: (videoId: string) => void;
 }
 
 export default function VideoCard({ video, isAdmin, onDelete, onPlay }: VideoCardProps) {
@@ -29,7 +29,7 @@ export default function VideoCard({ video, isAdmin, onDelete, onPlay }: VideoCar
 
   const handleDelete = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (confirm(`"${video.title}" videosini o'chirishni xohlaysizmi?`)) {
+    if (confirm("Videoni o'chirishni xohlaysizmi?")) {
       setIsDeleting(true);
       try {
         await onDelete(video.id);
@@ -43,7 +43,7 @@ export default function VideoCard({ video, isAdmin, onDelete, onPlay }: VideoCar
 
   const handlePlay = () => {
     if (videoId) {
-      onPlay(videoId, video.title);
+      onPlay(videoId);
     } else {
       alert('Video ID topilmadi.');
     }
@@ -54,12 +54,12 @@ export default function VideoCard({ video, isAdmin, onDelete, onPlay }: VideoCar
       {/* Thumbnail Area */}
       <div 
         onClick={handlePlay}
-        className="relative aspect-video w-full overflow-hidden bg-zinc-950 cursor-pointer"
+        className="relative aspect-video w-full overflow-hidden bg-zinc-950 cursor-pointer animate-pulse-slow"
       >
         {thumbnailUrl ? (
           <img
             src={thumbnailUrl}
-            alt={video.title}
+            alt="YouTube Video"
             onError={handleThumbnailError}
             loading="lazy"
             className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
@@ -88,43 +88,26 @@ export default function VideoCard({ video, isAdmin, onDelete, onPlay }: VideoCar
         )}
       </div>
 
-      {/* Content Area */}
-      <div className="flex flex-1 flex-col p-5">
+      {/* Content Area - Compact bar */}
+      <div className="flex items-center justify-between p-4 bg-zinc-900/10 border-t border-zinc-800/20">
         {/* Metadata info */}
-        <div className="flex items-center gap-1.5 text-xs text-zinc-500 mb-2">
+        <div className="flex items-center gap-1.5 text-xs text-zinc-500">
           <Calendar className="h-3.5 w-3.5" />
           <time dateTime={video.createdAt}>
-            {formatDate(video.createdAt, { day: 'numeric', month: 'long', year: 'numeric' })}
+            {formatDate(video.createdAt, { day: 'numeric', month: 'short', year: 'numeric' })}
           </time>
         </div>
 
-        {/* Title */}
-        <h3 
-          onClick={handlePlay}
-          className="text-base font-bold text-white line-clamp-2 hover:text-[var(--accent)] transition-colors cursor-pointer mb-2 leading-snug"
-        >
-          {video.title}
-        </h3>
-
-        {/* Description */}
-        {video.description && (
-          <p className="text-sm text-zinc-400 line-clamp-2 mb-4 leading-relaxed">
-            {video.description}
-          </p>
-        )}
-
-        {/* Bottom Actions Row (e.g., delete) */}
+        {/* Action Button */}
         {isAdmin && (
-          <div className="mt-auto pt-3 border-t border-zinc-800/60 flex justify-end">
-            <button
-              onClick={handleDelete}
-              disabled={isDeleting}
-              className="inline-flex items-center justify-center p-2 rounded-xl text-zinc-400 hover:text-red-400 hover:bg-red-500/10 transition-all disabled:opacity-50 cursor-pointer"
-              title="Videoni o'chirish"
-            >
-              <Trash2 className="h-4.5 w-4.5" />
-            </button>
-          </div>
+          <button
+            onClick={handleDelete}
+            disabled={isDeleting}
+            className="inline-flex items-center justify-center p-1.5 rounded-lg text-zinc-400 hover:text-red-400 hover:bg-red-500/10 transition-all disabled:opacity-50 cursor-pointer"
+            title="Videoni o'chirish"
+          >
+            <Trash2 className="h-4 w-4" />
+          </button>
         )}
       </div>
     </article>

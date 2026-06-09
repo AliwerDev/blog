@@ -20,10 +20,7 @@ export default function VideoListClient({
   const router = useRouter();
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [activePlayer, setActivePlayer] = useState<{
-    id: string;
-    title: string;
-  } | null>(null);
+  const [activePlayer, setActivePlayer] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
   // Extract all categories dynamically and normalize
@@ -61,8 +58,8 @@ export default function VideoListClient({
     });
   };
 
-  const handlePlayVideo = (videoId: string, title: string) => {
-    setActivePlayer({ id: videoId, title });
+  const handlePlayVideo = (videoId: string) => {
+    setActivePlayer(videoId);
   };
 
   const handleClosePlayer = () => {
@@ -169,19 +166,13 @@ export default function VideoListClient({
 
           <div className="relative w-full max-w-4xl aspect-video rounded-2xl shadow-2xl z-10 border border-zinc-800 bg-black overflow-hidden scale-in-95 duration-200">
             <iframe
-              src={`https://www.youtube.com/embed/${activePlayer.id}?autoplay=1&modestbranding=1`}
-              title={activePlayer.title}
+              src={`https://www.youtube.com/embed/${activePlayer}?autoplay=1&modestbranding=1`}
+              title="YouTube Video"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
               className="w-full h-full"
             />
-          </div>
-
-          <div className="relative z-10 max-w-4xl w-full text-center mt-4 px-4">
-            <h2 className="text-base md:text-lg font-bold text-white leading-relaxed line-clamp-1">
-              {activePlayer.title}
-            </h2>
           </div>
         </div>
       )}

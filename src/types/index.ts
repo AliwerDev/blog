@@ -11,9 +11,7 @@ export interface Post {
 
 export interface Video {
   id: string;
-  title: string;
   youtubeUrl: string;
-  description?: string;
   category?: string;
   createdAt: string;
 }

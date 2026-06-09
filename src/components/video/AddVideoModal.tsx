@@ -12,10 +12,8 @@ interface AddVideoModalProps {
 }
 
 export default function AddVideoModal({ isOpen, onClose, onSuccess }: AddVideoModalProps) {
-  const [title, setTitle] = useState('');
   const [youtubeUrl, setYoutubeUrl] = useState('');
   const [category, setCategory] = useState('');
-  const [description, setDescription] = useState('');
   
   const [error, setError] = useState('');
   const [isPending, startTransition] = useTransition();
@@ -25,11 +23,6 @@ export default function AddVideoModal({ isOpen, onClose, onSuccess }: AddVideoMo
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-
-    if (!title.trim()) {
-      setError('Sarlavha kiritilishi shart.');
-      return;
-    }
 
     if (!youtubeUrl.trim()) {
       setError('YouTube havola kiritilishi shart.');
@@ -44,18 +37,14 @@ export default function AddVideoModal({ isOpen, onClose, onSuccess }: AddVideoMo
 
     startTransition(async () => {
       const response = await createVideoAction({
-        title: title.trim(),
         youtubeUrl: youtubeUrl.trim(),
         category: category.trim() || 'Boshqa',
-        description: description.trim() || undefined,
       });
 
       if (response.success) {
         // Reset form
-        setTitle('');
         setYoutubeUrl('');
         setCategory('');
-        setDescription('');
         onSuccess();
         onClose();
       } else {
@@ -94,21 +83,6 @@ export default function AddVideoModal({ isOpen, onClose, onSuccess }: AddVideoMo
 
         <form onSubmit={handleSubmit} className="space-y-4.5">
           <div>
-            <label htmlFor="video-title" className="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">
-              Sarlavha <span className="text-purple-400">*</span>
-            </label>
-            <input
-              id="video-title"
-              type="text"
-              required
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="Masalan: Next.js Server Components qanday ishlaydi?"
-              className="w-full rounded-xl bg-zinc-950/80 border border-zinc-800 px-3.5 py-2.5 text-sm text-white placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-purple-500 transition-all"
-            />
-          </div>
-
-          <div>
             <label htmlFor="video-url" className="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">
               YouTube Havola <span className="text-purple-400">*</span>
             </label>
@@ -134,20 +108,6 @@ export default function AddVideoModal({ isOpen, onClose, onSuccess }: AddVideoMo
               onChange={(e) => setCategory(e.target.value)}
               placeholder="Masalan: Dasturlash, Dizayn (Boshqa)"
               className="w-full rounded-xl bg-zinc-950/80 border border-zinc-800 px-3.5 py-2.5 text-sm text-white placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-purple-500 transition-all"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="video-desc" className="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">
-              Tavsif (Qisqacha)
-            </label>
-            <textarea
-              id="video-desc"
-              rows={3}
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Video haqida qisqacha ma'lumot kiriting..."
-              className="w-full rounded-xl bg-zinc-950/80 border border-zinc-800 px-3.5 py-2.5 text-sm text-white placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-purple-500 transition-all resize-none"
             />
           </div>
 
