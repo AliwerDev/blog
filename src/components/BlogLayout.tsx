@@ -21,7 +21,7 @@ interface BlogLayoutProps {
   onSelectTopic: (id: string) => void;
   onSelectPost: (post: Post) => void;
   isAdmin: boolean;
-  onLoginClick: () => void;
+  onLoginClick?: () => void;
   onLogoutClick: () => void;
   onNewPostClick: () => void;
 }
@@ -80,16 +80,13 @@ export default function BlogLayout({
       {/* Top Header Navigation */}
       <header className="flex items-center justify-between py-6 mb-12 border-b border-zinc-800/80">
         <div className="flex items-center gap-2">
-          <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
-            <span className="text-white font-extrabold text-lg font-display">A</span>
-          </div>
-          <span className="text-xl font-bold font-display tracking-tight text-white bg-clip-text">
-            Antigravity<span className="text-purple-400 font-normal">.blog</span>
+          <span className="text-xl font-bold font-display tracking-tight text-white">
+            alisher<span className="text-purple-400 font-normal">.blog</span>
           </span>
         </div>
 
         <div className="flex items-center gap-3">
-          {isAdmin ? (
+          {isAdmin && (
             <>
               <button
                 onClick={onNewPostClick}
@@ -106,30 +103,11 @@ export default function BlogLayout({
                 Chiqish
               </button>
             </>
-          ) : (
-            <button
-              onClick={onLoginClick}
-              className="inline-flex items-center gap-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 px-4 py-2 text-sm font-semibold text-zinc-300 hover:text-white transition-all cursor-pointer"
-            >
-              <LogIn className="h-4.5 w-4.5" />
-              Kirish
-            </button>
           )}
         </div>
       </header>
 
-      {/* Hero Intro */}
-      <section className="mb-12 text-center md:text-left">
-        <h1 className="text-4xl md:text-5xl font-extrabold font-display text-white tracking-tight leading-tight mb-4">
-          Fikrlar, loyihalar va <br className="hidden md:inline" />
-          <span className="bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent">
-            texnologik dunyo
-          </span>
-        </h1>
-        <p className="text-zinc-400 max-w-xl text-base md:text-lg">
-          Dasturlash, dizayn va zamonaviy texnologiyalar haqidagi shaxsiy fikrlarim hamda maqolalar jamlanmasi.
-        </p>
-      </section>
+      {/* Hero Intro removed */}
 
       {/* Topics Filter Tabs */}
       <div className="flex overflow-x-auto pb-4 mb-8 -mx-4 px-4 scrollbar-none">

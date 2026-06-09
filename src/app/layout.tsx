@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Antigravity Blog",
+  title: "alisher.blog",
   description: "Dasturlash va dizayn haqidagi shaxsiy blog",
 };
 

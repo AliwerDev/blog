@@ -1,11 +1,10 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 import BlogLayout from '@/components/BlogLayout';
 import PostDetail from '@/components/PostDetail';
-import AuthModal from '@/components/AuthModal';
-import PostEditor from '@/components/PostEditor';
 import { Loader2 } from 'lucide-react';
 
 interface Post {
@@ -19,14 +18,11 @@ interface Post {
 }
 
 export default function Home() {
+  const router = useRouter();
   const [posts, setPosts] = useState<Post[]>([]);
   const [selectedTopic, setSelectedTopic] = useState('all');
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
-  
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [isEditorOpen, setIsEditorOpen] = useState(false);
-  const [editingPost, setEditingPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
 
   // Fetch posts from API
@@ -75,8 +71,6 @@ export default function Home() {
       const res = await fetch('/api/auth', { method: 'DELETE' });
       if (res.ok) {
         setIsAdmin(false);
-        // If viewing detailed view as admin, close editor just in case
-        setIsEditorOpen(false);
       }
     } catch (error) {
       console.error('Logout error:', error);
@@ -84,30 +78,11 @@ export default function Home() {
   };
 
   const handleEditClick = (post: Post) => {
-    setEditingPost(post);
-    setIsEditorOpen(true);
+    router.push(`/new-post?edit=${post.id}`);
   };
 
   const handleNewPostClick = () => {
-    setEditingPost(null);
-    setIsEditorOpen(true);
-  };
-
-  const handlePostSaved = () => {
-    fetchPosts();
-    // If we were editing a post, update the selected post detail view as well
-    if (selectedPost) {
-      const updated = posts.find(p => p.id === selectedPost.id);
-      if (updated) {
-        // Refetch to get the freshest data
-        fetch(`/api/posts`)
-          .then(res => res.json())
-          .then(data => {
-            const freshPost = data.find((p: Post) => p.id === selectedPost.id);
-            if (freshPost) setSelectedPost(freshPost);
-          });
-      }
-    }
+    router.push('/new-post');
   };
 
   return (
@@ -138,7 +113,6 @@ export default function Home() {
                     onSelectTopic={setSelectedTopic}
                     onSelectPost={setSelectedPost}
                     isAdmin={isAdmin}
-                    onLoginClick={() => setIsAuthModalOpen(true)}
                     onLogoutClick={handleLogout}
                     onNewPostClick={handleNewPostClick}
                   />
@@ -168,33 +142,6 @@ export default function Home() {
         )}
       </main>
 
-      {/* Auth Modal Overlay */}
-      <AnimatePresence>
-        {isAuthModalOpen && (
-          <AuthModal
-            isOpen={isAuthModalOpen}
-            onClose={() => setIsAuthModalOpen(false)}
-            onSuccess={() => {
-              setIsAdmin(true);
-            }}
-          />
-        )}
-      </AnimatePresence>
-
-      {/* Post Editor Overlay */}
-      <AnimatePresence>
-        {isEditorOpen && (
-          <PostEditor
-            isOpen={isEditorOpen}
-            onClose={() => {
-              setIsEditorOpen(false);
-              setEditingPost(null);
-            }}
-            onSave={handlePostSaved}
-            post={editingPost}
-          />
-        )}
-      </AnimatePresence>
     </div>
   );
 }
