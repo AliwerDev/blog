@@ -15,7 +15,6 @@ export default function Header({ isAdmin }: HeaderProps) {
   const pathname = usePathname();
 
   const isBlogActive = pathname === '/';
-  const isVideosActive = pathname === '/videos' || pathname.startsWith('/videos/');
 
   const handleLogout = () => {
     if (confirm('Tizimdan chiqmoqchimisiz?')) {
@@ -44,16 +43,6 @@ export default function Header({ isAdmin }: HeaderProps) {
             }`}
           >
             Blog
-          </Link>
-          <Link
-            href="/videos"
-            className={`transition-colors duration-200 ${
-              isVideosActive 
-                ? 'text-[var(--accent)] font-bold' 
-                : 'text-zinc-400 hover:text-zinc-200 font-medium'
-            }`}
-          >
-            Videolar
           </Link>
         </nav>
       </div>

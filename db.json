@@ -1,11 +1,3 @@
 {
-  "posts": [],
-  "videos": [
-    {
-      "id": "sample-nextjs",
-      "youtubeUrl": "https://www.youtube.com/watch?v=wm5gMKuwSYk",
-      "category": "Dasturlash",
-      "createdAt": "2026-06-09T17:34:00.000Z"
-    }
-  ]
+  "posts": []
 }

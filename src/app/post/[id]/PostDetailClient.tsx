@@ -91,7 +91,7 @@ export default function PostDetailClient({ post, isAdmin }: PostDetailClientProp
           </div>
 
           {error && (
-            <div className="text-sm text-rose-500 bg-rose-500/10 border border-rose-500/20 rounded-xl p-3 mb-6 text-center max-w-3xl mx-auto">
+            <div className="text-sm text-rose-500 bg-rose-500/10 border border-rose-500/20 rounded-xl p-3 mb-6 text-center max-w-5xl mx-auto">
               {error}
             </div>
           )}

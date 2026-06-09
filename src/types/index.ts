@@ -9,16 +9,8 @@ export interface Post {
   updatedAt: string;
 }
 
-export interface Video {
-  id: string;
-  youtubeUrl: string;
-  category?: string;
-  createdAt: string;
-}
-
 export interface DatabaseSchema {
   posts: Post[];
-  videos?: Video[];
 }
 
 export interface AdminSession {

@@ -1,8 +1,8 @@
 import fs from 'fs/promises';
 import path from 'path';
 
-import { Post, Video, DatabaseSchema } from '@/types';
-export type { Post, Video, DatabaseSchema };
+import { Post, DatabaseSchema } from '@/types';
+export type { Post, DatabaseSchema };
 
 
 const DB_PATH = path.join(process.cwd(), 'db.json');
@@ -105,13 +105,7 @@ export async function savePosts(posts: Post[]): Promise<void> {
   }
 
   try {
-    let videos: Video[] = [];
-    if (await fileExists(DB_PATH)) {
-      const fileData = await fs.readFile(DB_PATH, 'utf-8');
-      const parsed = JSON.parse(fileData) as DatabaseSchema;
-      videos = parsed.videos || [];
-    }
-    const data: DatabaseSchema = { posts, videos };
+    const data: DatabaseSchema = { posts };
     await fs.writeFile(DB_PATH, JSON.stringify(data, null, 2), 'utf-8');
   } catch (error) {
     console.error('Error writing to database:', error);
@@ -168,122 +162,4 @@ export async function deletePost(id: string): Promise<boolean> {
   return true;
 }
 
-// Fetch videos from Vercel KV / Upstash Redis
-async function fetchVideosFromKv(): Promise<Video[]> {
-  try {
-    const res = await fetch(`${process.env.KV_REST_API_URL}/get/videos`, {
-      headers: {
-        Authorization: `Bearer ${process.env.KV_REST_API_TOKEN}`,
-      },
-      cache: 'no-store',
-    });
-    if (!res.ok) return [];
-    const data = await res.json();
-    if (!data.result) return [];
-    
-    let parsed = JSON.parse(data.result);
-    if (typeof parsed === 'string') {
-      parsed = JSON.parse(parsed);
-    }
-    return (Array.isArray(parsed) ? parsed : []) as Video[];
-  } catch (error) {
-    console.error('Vercel KV o\'qishda xatolik (videolar):', error);
-    return [];
-  }
-}
 
-// Save videos to Vercel KV / Upstash Redis
-async function saveVideosToKv(videos: Video[]): Promise<void> {
-  try {
-    const res = await fetch(`${process.env.KV_REST_API_URL}/set/videos`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${process.env.KV_REST_API_TOKEN}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(videos),
-    });
-    if (!res.ok) {
-      throw new Error('KV yozishda xatolik yuz berdi (videolar)');
-    }
-  } catch (error) {
-    console.error('Vercel KV saqlashda xatolik (videolar):', error);
-    throw error;
-  }
-}
-
-// Read database and return video list
-export async function getVideos(): Promise<Video[]> {
-  if (isKvEnabled) {
-    return await fetchVideosFromKv();
-  }
-
-  try {
-    if (!(await fileExists(DB_PATH))) {
-      await initDb();
-      return [];
-    }
-    const data = await fs.readFile(DB_PATH, 'utf-8');
-    const parsed = JSON.parse(data) as DatabaseSchema;
-    return parsed.videos || [];
-  } catch (error) {
-    console.error('Error reading videos database:', error);
-    return [];
-  }
-}
-
-// Save all videos to DB
-export async function saveVideos(videos: Video[]): Promise<void> {
-  if (isKvEnabled) {
-    await saveVideosToKv(videos);
-    return;
-  }
-
-  if (process.env.VERCEL === '1') {
-    throw new Error(
-      "Vercel KV o'rnatilmagan yoki ulanmagan. Iltimos, Vercel Dashboard orqali loyihangizga KV (Redis) ma'lumotlar omborini yarating va ulang."
-    );
-  }
-
-  try {
-    let posts: Post[] = [];
-    if (await fileExists(DB_PATH)) {
-      const fileData = await fs.readFile(DB_PATH, 'utf-8');
-      const parsed = JSON.parse(fileData) as DatabaseSchema;
-      posts = parsed.posts || [];
-    }
-    const data: DatabaseSchema = { posts, videos };
-    await fs.writeFile(DB_PATH, JSON.stringify(data, null, 2), 'utf-8');
-  } catch (error) {
-    console.error('Error writing to database (videos):', error);
-    throw new Error('Failed to save videos');
-  }
-}
-
-// Add a single video
-export async function createVideo(
-  videoData: Omit<Video, 'id' | 'createdAt'>
-): Promise<Video> {
-  const videos = await getVideos();
-  const now = new Date().toISOString();
-  
-  const newVideo: Video = {
-    ...videoData,
-    id: Math.random().toString(36).substring(2, 11),
-    createdAt: now,
-  };
-  
-  videos.unshift(newVideo); // Add to beginning (latest first)
-  await saveVideos(videos);
-  return newVideo;
-}
-
-// Delete a video
-export async function deleteVideo(id: string): Promise<boolean> {
-  const videos = await getVideos();
-  const filtered = videos.filter((v) => v.id !== id);
-  if (filtered.length === videos.length) return false;
-  
-  await saveVideos(filtered);
-  return true;
-}
