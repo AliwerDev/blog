@@ -17,6 +17,48 @@ export interface DatabaseSchema {
 
 const DB_PATH = path.join(process.cwd(), 'db.json');
 
+// Check if Vercel KV environment variables are available
+const isKvEnabled = !!(process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN);
+
+// Fetch posts from Vercel KV / Upstash Redis
+async function fetchFromKv(): Promise<Post[]> {
+  try {
+    const res = await fetch(`${process.env.KV_REST_API_URL}/get/posts`, {
+      headers: {
+        Authorization: `Bearer ${process.env.KV_REST_API_TOKEN}`,
+      },
+      cache: 'no-store',
+    });
+    if (!res.ok) return [];
+    const data = await res.json();
+    if (!data.result) return [];
+    return JSON.parse(data.result) as Post[];
+  } catch (error) {
+    console.error('Vercel KV o\'qishda xatolik:', error);
+    return [];
+  }
+}
+
+// Save posts to Vercel KV / Upstash Redis
+async function saveToKv(posts: Post[]): Promise<void> {
+  try {
+    const res = await fetch(`${process.env.KV_REST_API_URL}/set/posts`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${process.env.KV_REST_API_TOKEN}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(JSON.stringify(posts)),
+    });
+    if (!res.ok) {
+      throw new Error('KV yozishda xatolik yuz berdi');
+    }
+  } catch (error) {
+    console.error('Vercel KV saqlashda xatolik:', error);
+    throw error;
+  }
+}
+
 // Helper to check if file exists
 async function fileExists(filePath: string): Promise<boolean> {
   try {
@@ -29,6 +71,10 @@ async function fileExists(filePath: string): Promise<boolean> {
 
 // Read database and return post list
 export async function getPosts(): Promise<Post[]> {
+  if (isKvEnabled) {
+    return await fetchFromKv();
+  }
+
   try {
     if (!(await fileExists(DB_PATH))) {
       await initDb();
@@ -51,6 +97,11 @@ async function initDb(): Promise<void> {
 
 // Save all posts to DB
 export async function savePosts(posts: Post[]): Promise<void> {
+  if (isKvEnabled) {
+    await saveToKv(posts);
+    return;
+  }
+
   try {
     const data: DatabaseSchema = { posts };
     await fs.writeFile(DB_PATH, JSON.stringify(data, null, 2), 'utf-8');
