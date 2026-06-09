@@ -21,7 +21,7 @@ export default function PostDetailContent({ post }: PostDetailContentProps) {
   };
 
   return (
-    <article className="glass rounded-2xl p-6 md:p-10 shadow-xl border border-zinc-800/60 max-w-3xl mx-auto">
+    <article className="glass rounded-2xl p-6 md:p-10 shadow-xl border border-zinc-800/60 max-w-5xl mx-auto">
       {/* Metadata */}
       <div className="flex flex-wrap items-center gap-4 text-xs text-zinc-400 mb-6">
         <div className="flex flex-wrap gap-2">
@@ -32,9 +32,9 @@ export default function PostDetailContent({ post }: PostDetailContentProps) {
         <div className="inline-flex items-center gap-1.5 text-zinc-500">
           <Calendar className="h-3.5 w-3.5" />
           {formatDate(post.createdAt, {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric',
+            day: "numeric",
+            month: "long",
+            year: "numeric",
           })}
         </div>
       </div>
@@ -45,7 +45,7 @@ export default function PostDetailContent({ post }: PostDetailContentProps) {
       </h1>
 
       {/* HTML Rich Text Body */}
-      <div 
+      <div
         className="prose max-w-none text-zinc-300"
         dangerouslySetInnerHTML={{ __html: post.content }}
       />
