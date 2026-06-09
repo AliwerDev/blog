@@ -189,7 +189,7 @@ function NewPostForm() {
       {/* Ambient gradient glow */}
       <div className="glow-bg" />
 
-      <div className="w-full max-w-3xl mx-auto relative z-10">
+      <div className="w-full max-w-5xl mx-auto relative z-10">
         {/* Navigation Header */}
         <div className="flex items-center justify-between mb-8 border-b border-zinc-800/80 pb-4">
           <Link
@@ -205,12 +205,12 @@ function NewPostForm() {
         </div>
 
         {error && (
-          <div className="text-sm text-rose-500 bg-rose-500/10 border border-rose-500/20 rounded-xl p-3 mb-6 text-center">
+          <div className="text-sm text-rose-500 bg-rose-500/10 border border-rose-500/20 rounded-xl p-3 mb-6 text-center max-w-3xl mx-auto">
             {error}
           </div>
         )}
 
-        <form onSubmit={handleSave} className="space-y-6">
+        <form onSubmit={handleSave} className="space-y-6 max-w-3xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Title input */}
             <div className="md:col-span-2">
