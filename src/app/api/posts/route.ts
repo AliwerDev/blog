@@ -48,8 +48,12 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json(newPost, { status: 201 });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error creating post:', error);
-    return NextResponse.json({ error: 'Post yaratishda xatolik' }, { status: 500 });
+    return NextResponse.json({
+      error: 'Post yaratishda xatolik',
+      details: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    }, { status: 500 });
   }
 }
