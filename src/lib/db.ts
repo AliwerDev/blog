@@ -6,7 +6,8 @@ export interface Post {
   title: string;
   content: string;
   previewText: string;
-  topicId: string;
+  tags: string[];
+  topicId?: string;
   createdAt: string;
   updatedAt: string;
 }

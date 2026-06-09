@@ -6,16 +6,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import BlogLayout from '@/components/BlogLayout';
 import PostDetail from '@/components/PostDetail';
 import { Loader2 } from 'lucide-react';
-
-interface Post {
-  id: string;
-  title: string;
-  content: string;
-  previewText: string;
-  topicId: string;
-  createdAt: string;
-  updatedAt: string;
-}
+import type { Post } from '@/lib/db';
 
 export default function Home() {
   const router = useRouter();

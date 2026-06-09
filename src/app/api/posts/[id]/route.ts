@@ -26,7 +26,7 @@ export async function PUT(
 
     // 2. Validate update data
     const body = await req.json();
-    const { title, content, topicId } = body;
+    const { title, content, tags } = body;
 
     const updates: Partial<Omit<Post, 'id' | 'createdAt' | 'updatedAt'>> = {};
     if (title !== undefined) updates.title = title;
@@ -34,7 +34,7 @@ export async function PUT(
       updates.content = content;
       updates.previewText = extractPreview(content);
     }
-    if (topicId !== undefined) updates.topicId = topicId;
+    if (tags !== undefined && Array.isArray(tags)) updates.tags = tags;
 
     // 3. Update database
     const updated = await updatePost(id, updates);

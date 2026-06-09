@@ -3,18 +3,8 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Edit, Trash2, Calendar, Tag, Loader2 } from 'lucide-react';
-import topicsData from '@/config/topics.json';
 import ThemeToggle from './ThemeToggle';
-
-interface Post {
-  id: string;
-  title: string;
-  content: string;
-  previewText: string;
-  topicId: string;
-  createdAt: string;
-  updatedAt: string;
-}
+import type { Post } from '@/lib/db';
 
 interface PostDetailProps {
   post: Post;
@@ -28,7 +18,16 @@ export default function PostDetail({ post, isAdmin, onBack, onEdit, onDeleteSucc
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState('');
 
-  const topic = topicsData.find((t) => t.id === post.topicId);
+  // Helper to extract normalized tags list for a post
+  const getPostTags = (post: Post): string[] => {
+    if (post.tags && Array.isArray(post.tags) && post.tags.length > 0) {
+      return post.tags;
+    }
+    if (post.topicId) {
+      return [post.topicId];
+    }
+    return [];
+  };
 
   const handleDelete = async () => {
     if (!confirm('Haqiqatan ham ushbu postni o\'chirmoqchimisiz?')) return;
@@ -123,11 +122,18 @@ export default function PostDetail({ post, isAdmin, onBack, onEdit, onDeleteSucc
       <article className="glass rounded-2xl p-6 md:p-10 shadow-xl border border-zinc-800/60 max-w-3xl mx-auto">
         {/* Metadata */}
         <div className="flex flex-wrap items-center gap-4 text-xs text-zinc-400 mb-6">
-          <div className="inline-flex items-center gap-1.5 bg-zinc-900 border border-zinc-800 rounded-full px-3 py-1 text-purple-400 font-medium">
-            <Tag className="h-3.5 w-3.5" />
-            {topic?.label || 'Kategoriya'}
+          <div className="flex flex-wrap gap-2">
+            {getPostTags(post).map((tag) => (
+              <span
+                key={tag}
+                className="inline-flex items-center gap-1.5 bg-zinc-900 border border-zinc-800 rounded-full px-3 py-1 text-purple-400 font-medium"
+              >
+                <Tag className="h-3.5 w-3.5" />
+                #{tag}
+              </span>
+            ))}
           </div>
-          <div className="inline-flex items-center gap-1.5">
+          <div className="inline-flex items-center gap-1.5 text-zinc-500">
             <Calendar className="h-3.5 w-3.5" />
             {formatDate(post.createdAt)}
           </div>

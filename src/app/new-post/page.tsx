@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Loader2, ArrowLeft, Save } from 'lucide-react';
+import { Loader2, ArrowLeft, Save, X } from 'lucide-react';
 import Link from 'next/link';
 import topicsData from '@/config/topics.json';
 import ThemeToggle from '@/components/ThemeToggle';
@@ -42,10 +42,9 @@ function NewPostForm() {
   const searchParams = useSearchParams();
   const editId = searchParams.get('edit');
 
-  const allowedTopics = topicsData.filter(t => t.id !== 'all');
-
   const [title, setTitle] = useState('');
-  const [topicId, setTopicId] = useState(allowedTopics[0]?.id || '');
+  const [tags, setTags] = useState<string[]>([]);
+  const [tagInput, setTagInput] = useState('');
   const [content, setContent] = useState('');
   
   const [checkingAuth, setCheckingAuth] = useState(true);
@@ -54,6 +53,23 @@ function NewPostForm() {
   const [error, setError] = useState('');
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const val = tagInput.trim().toLowerCase().replace(/#/g, '');
+      if (val && !tags.includes(val)) {
+        setTags([...tags, val]);
+        setTagInput('');
+      }
+    } else if (e.key === 'Backspace' && !tagInput && tags.length > 0) {
+      setTags(tags.slice(0, -1));
+    }
+  };
+
+  const handleRemoveTag = (tagToRemove: string) => {
+    setTags(tags.filter(tag => tag !== tagToRemove));
+  };
 
   // 1. Verify Authentication Status
   useEffect(() => {
@@ -91,7 +107,7 @@ function NewPostForm() {
           const post = posts.find((p: { id: string }) => p.id === editId);
           if (post) {
             setTitle(post.title);
-            setTopicId(post.topicId);
+            setTags(post.tags || (post.topicId ? [post.topicId] : []));
             setContent(toPlainText(post.content));
           } else {
             setError('Tahrirlanayotgan post topilmadi');
@@ -123,8 +139,8 @@ function NewPostForm() {
       setError('Sarlavhani kiriting');
       return;
     }
-    if (!topicId) {
-      setError('Mavzuni tanlang');
+    if (tags.length === 0) {
+      setError('Kamida bitta tag (hashtag) kiriting');
       return;
     }
     if (!content.trim()) {
@@ -148,7 +164,7 @@ function NewPostForm() {
         body: JSON.stringify({
           title,
           content: htmlContent,
-          topicId,
+          tags,
         }),
       });
 
@@ -215,9 +231,9 @@ function NewPostForm() {
         )}
 
         <form onSubmit={handleSave} className="space-y-6 max-w-3xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="space-y-4">
             {/* Title input */}
-            <div className="md:col-span-2">
+            <div>
               <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">
                 Sarlavha
               </label>
@@ -227,26 +243,40 @@ function NewPostForm() {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Post sarlavhasini kiriting..."
-                className="w-full rounded-xl bg-zinc-900 border border-zinc-800 py-3 px-4 text-white outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all font-display text-lg"
+                className="w-full rounded-xl bg-zinc-900 border border-zinc-800 py-3.5 px-4 text-white outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all font-display text-lg shadow-inner"
               />
             </div>
 
-            {/* Topic selector */}
+            {/* Dynamic Tags Input */}
             <div>
               <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">
-                Mavzu
+                Hashtaglar (Enter tugmasi orqali qo'shing)
               </label>
-              <select
-                value={topicId}
-                onChange={(e) => setTopicId(e.target.value)}
-                className="w-full rounded-xl bg-zinc-900 border border-zinc-800 py-3 px-4 text-white outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all cursor-pointer"
-              >
-                {allowedTopics.map((topic) => (
-                  <option key={topic.id} value={topic.id}>
-                    {topic.label}
-                  </option>
+              <div className="w-full rounded-xl bg-zinc-900 border border-zinc-800 p-2 focus-within:border-purple-500 focus-within:ring-1 focus-within:ring-purple-500 transition-all flex flex-wrap gap-2 items-center min-h-[50px] shadow-inner">
+                {tags.map((tag, idx) => (
+                  <span
+                    key={idx}
+                    className="inline-flex items-center gap-1.5 bg-purple-500/10 border border-purple-500/30 text-purple-300 rounded-lg px-2.5 py-1 text-xs font-semibold"
+                  >
+                    #{tag}
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveTag(tag)}
+                      className="text-purple-400 hover:text-purple-200 transition-colors focus:outline-none cursor-pointer"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </span>
                 ))}
-              </select>
+                <input
+                  type="text"
+                  value={tagInput}
+                  onChange={(e) => setTagInput(e.target.value)}
+                  onKeyDown={handleTagKeyDown}
+                  placeholder={tags.length === 0 ? "Tag yozib, Enter bosing (masalan: tech, coding)..." : "Yana tag qo'shish..."}
+                  className="flex-1 min-w-[150px] bg-transparent border-none outline-none text-white text-sm py-1 px-2 focus:ring-0 focus:outline-none"
+                />
+              </div>
             </div>
           </div>
 

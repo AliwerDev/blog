@@ -32,9 +32,9 @@ export async function POST(req: NextRequest) {
 
     // 2. Validate request
     const body = await req.json();
-    const { title, content, topicId } = body;
+    const { title, content, tags } = body;
 
-    if (!title || !content || !topicId) {
+    if (!title || !content || !tags || !Array.isArray(tags)) {
       return NextResponse.json({ error: 'Barcha maydonlarni to\'ldiring' }, { status: 400 });
     }
 
@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
       title,
       content,
       previewText,
-      topicId,
+      tags,
     });
 
     return NextResponse.json(newPost, { status: 201 });

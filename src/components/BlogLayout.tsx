@@ -3,18 +3,8 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, LogIn, LogOut, Tag, Calendar, ChevronRight } from 'lucide-react';
-import topicsData from '@/config/topics.json';
 import ThemeToggle from './ThemeToggle';
-
-interface Post {
-  id: string;
-  title: string;
-  content: string;
-  previewText: string;
-  topicId: string;
-  createdAt: string;
-  updatedAt: string;
-}
+import type { Post } from '@/lib/db';
 
 interface BlogLayoutProps {
   posts: Post[];
@@ -38,10 +28,34 @@ export default function BlogLayout({
   onNewPostClick,
 }: BlogLayoutProps) {
   
-  // Filter posts based on selected topic
+  // Helper to extract normalized tags list for a post
+  const getPostTags = (post: Post): string[] => {
+    if (post.tags && Array.isArray(post.tags) && post.tags.length > 0) {
+      return post.tags;
+    }
+    if (post.topicId) {
+      return [post.topicId];
+    }
+    return [];
+  };
+
+  // Dynamically extract unique tags from all posts
+  const allTags = React.useMemo(() => {
+    const tagsSet = new Set<string>();
+    posts.forEach((post) => {
+      getPostTags(post).forEach((tag) => {
+        if (tag) {
+          tagsSet.add(tag.toLowerCase());
+        }
+      });
+    });
+    return Array.from(tagsSet);
+  }, [posts]);
+
+  // Filter posts based on selected tag/topic
   const filteredPosts = selectedTopic === 'all'
     ? posts
-    : posts.filter((post) => post.topicId === selectedTopic);
+    : posts.filter((post) => getPostTags(post).includes(selectedTopic));
 
   const formatDate = (dateStr: string) => {
     try {
@@ -54,10 +68,6 @@ export default function BlogLayout({
     } catch {
       return dateStr;
     }
-  };
-
-  const getTopicLabel = (topicId: string) => {
-    return topicsData.find((t) => t.id === topicId)?.label || topicId;
   };
 
   // Stagger animation container
@@ -111,21 +121,31 @@ export default function BlogLayout({
 
       {/* Hero Intro removed */}
 
-      {/* Topics Filter Tags */}
+      {/* Dynamic Tags Filter Tabs */}
       <div className="flex flex-wrap gap-2.5 mb-8 topic-tabs-container">
-        {topicsData.map((topic) => {
-          const isActive = selectedTopic === topic.id;
+        <button
+          onClick={() => onSelectTopic('all')}
+          className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold tracking-wide transition-all cursor-pointer border ${
+            selectedTopic === 'all'
+              ? 'bg-[var(--accent)]/10 border-[var(--accent)]/40 text-[var(--accent)] font-bold shadow-sm'
+              : 'bg-zinc-900/40 border-zinc-800/60 text-zinc-400 hover:text-zinc-200'
+          }`}
+        >
+          #barchasi
+        </button>
+        {allTags.map((tag) => {
+          const isActive = selectedTopic === tag;
           return (
             <button
-              key={topic.id}
-              onClick={() => onSelectTopic(topic.id)}
+              key={tag}
+              onClick={() => onSelectTopic(tag)}
               className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold tracking-wide transition-all cursor-pointer border ${
                 isActive
                   ? 'bg-[var(--accent)]/10 border-[var(--accent)]/40 text-[var(--accent)] font-bold shadow-sm'
                   : 'bg-zinc-900/40 border-zinc-800/60 text-zinc-400 hover:text-zinc-200'
               }`}
             >
-              #{topic.id}
+              #{tag}
             </button>
           );
         })}
@@ -150,11 +170,18 @@ export default function BlogLayout({
               >
                 <div>
                   {/* Card Meta */}
-                  <div className="flex items-center gap-3 text-xs text-zinc-500 mb-4">
-                    <span className="inline-flex items-center gap-1 bg-zinc-900 border border-zinc-800 px-2.5 py-0.5 rounded-full text-purple-400 font-medium">
-                      <Tag className="h-3 w-3" />
-                      {getTopicLabel(post.topicId)}
-                    </span>
+                  <div className="flex flex-wrap items-center gap-3 text-xs text-zinc-500 mb-4">
+                    <div className="flex flex-wrap gap-1.5">
+                      {getPostTags(post).map((tag) => (
+                        <span
+                          key={tag}
+                          className="inline-flex items-center gap-1 bg-zinc-900 border border-zinc-800 px-2.5 py-0.5 rounded-full text-purple-400 font-medium"
+                        >
+                          <Tag className="h-3 w-3" />
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
                     <span className="inline-flex items-center gap-1">
                       <Calendar className="h-3 w-3" />
                       {formatDate(post.createdAt)}
