@@ -111,31 +111,24 @@ export default function BlogLayout({
 
       {/* Hero Intro removed */}
 
-      {/* Topics Filter Tabs */}
-      <div className="flex overflow-x-auto pb-4 mb-8 -mx-4 px-4 scrollbar-none">
-        <div className="flex gap-2 bg-zinc-950 p-1 rounded-2xl border border-zinc-900/80 topic-tabs-container">
-          {topicsData.map((topic) => {
-            const isActive = selectedTopic === topic.id;
-            return (
-              <button
-                key={topic.id}
-                onClick={() => onSelectTopic(topic.id)}
-                className={`relative px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors cursor-pointer ${
-                  isActive ? 'text-white' : 'text-zinc-400 hover:text-zinc-200'
-                }`}
-              >
-                {isActive && (
-                  <motion.div
-                    layoutId="activeTab"
-                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                    className="absolute inset-0 bg-zinc-900 border border-zinc-800/80 rounded-xl"
-                  />
-                )}
-                <span className="relative z-10">{topic.label}</span>
-              </button>
-            );
-          })}
-        </div>
+      {/* Topics Filter Tags */}
+      <div className="flex flex-wrap gap-2.5 mb-8 topic-tabs-container">
+        {topicsData.map((topic) => {
+          const isActive = selectedTopic === topic.id;
+          return (
+            <button
+              key={topic.id}
+              onClick={() => onSelectTopic(topic.id)}
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold tracking-wide transition-all cursor-pointer border ${
+                isActive
+                  ? 'bg-[var(--accent)]/10 border-[var(--accent)]/40 text-[var(--accent)] font-bold shadow-sm'
+                  : 'bg-zinc-900/40 border-zinc-800/60 text-zinc-400 hover:text-zinc-200'
+              }`}
+            >
+              #{topic.id}
+            </button>
+          );
+        })}
       </div>
 
       {/* Posts Cards Grid */}

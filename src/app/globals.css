@@ -298,14 +298,14 @@ input:-webkit-autofill:focus {
 }
 
 /* Topic tabs styling overrides in light mode */
-.light .topic-tabs-container button.text-white {
-  color: var(--foreground) !important;
-}
-
 .light .topic-tabs-container button {
   color: var(--muted) !important;
 }
 
 .light .topic-tabs-container button:hover {
   color: var(--foreground) !important;
+}
+
+.light .topic-tabs-container button.text-\[var\(--accent\)\] {
+  color: var(--accent) !important;
 }
