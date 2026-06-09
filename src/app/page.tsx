@@ -86,7 +86,7 @@ export default function Home() {
   };
 
   return (
-    <div className="relative min-h-screen px-4 py-8 md:py-16">
+    <div className="relative min-h-screen px-4 pt-2 md:pt-4 pb-8 md:pb-16">
       {/* Dynamic ambient gradient glow */}
       <div className="glow-bg" />
 
