@@ -1,10 +1,18 @@
 import { NextResponse } from 'next/server';
 
 export async function GET() {
+  const envKeys = Object.keys(process.env).map(key => {
+    const value = process.env[key];
+    return {
+      key,
+      exists: !!value,
+      length: value ? value.length : 0,
+      preview: value && !key.toLowerCase().includes('secret') && !key.toLowerCase().includes('token') && !key.toLowerCase().includes('pass') && !key.toLowerCase().includes('auth') && !key.toLowerCase().includes('key') ? value.substring(0, 20) : 'HIDDEN',
+    };
+  });
+
   return NextResponse.json({
-    KV_REST_API_URL_exists: !!process.env.KV_REST_API_URL,
-    KV_REST_API_URL_value: process.env.KV_REST_API_URL ? process.env.KV_REST_API_URL.substring(0, 15) + '...' : null,
-    KV_REST_API_TOKEN_exists: !!process.env.KV_REST_API_TOKEN,
+    envKeys,
     NODE_ENV: process.env.NODE_ENV,
   });
 }
