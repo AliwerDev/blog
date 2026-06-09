@@ -5,10 +5,8 @@ const JWT_SECRET = process.env.JWT_SECRET || 'a-very-long-fallback-secret-key-ch
 const SECRET_KEY = new TextEncoder().encode(JWT_SECRET);
 export const COOKIE_NAME = 'admin_session';
 
-export interface AdminSession {
-  email: string;
-  role: 'admin';
-}
+import { AdminSession } from '@/types';
+
 
 // Generate a JWT for admin session
 export async function createSession(email: string): Promise<string> {

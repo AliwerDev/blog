@@ -4,7 +4,7 @@ import { cookies } from 'next/headers';
 import { Metadata } from 'next';
 import { getPosts } from '@/lib/db';
 import { verifySession, COOKIE_NAME } from '@/lib/auth';
-import PostDetailWrapper from './PostDetailWrapper';
+import PostDetailClient from './PostDetailClient';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -59,5 +59,5 @@ export default async function PostPage({ params }: PageProps) {
   const token = cookieStore.get(COOKIE_NAME)?.value;
   const isAdmin = token ? (await verifySession(token)) !== null : false;
 
-  return <PostDetailWrapper post={post} isAdmin={isAdmin} />;
+  return <PostDetailClient post={post} isAdmin={isAdmin} />;
 }

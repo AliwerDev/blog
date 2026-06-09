@@ -1,3 +1,13 @@
 {
-  "posts": []
+  "posts": [],
+  "videos": [
+    {
+      "id": "sample-nextjs",
+      "title": "Next.js App Router in 100 Seconds",
+      "youtubeUrl": "https://www.youtube.com/watch?v=wm5gMKuwSYk",
+      "description": "Quick overview of the Next.js App Router features, layouts, and routing conventions.",
+      "category": "Dasturlash",
+      "createdAt": "2026-06-09T17:34:00.000Z"
+    }
+  ]
 }
