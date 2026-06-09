@@ -163,6 +163,7 @@ export default function BlogLayout({
             variants={containerVariants}
             initial="hidden"
             animate="show"
+            className="grid grid-cols-1 gap-6"
           >
             {filteredPosts.map((post) => (
               <motion.article
