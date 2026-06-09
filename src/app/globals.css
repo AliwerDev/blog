@@ -291,3 +291,21 @@ input:-webkit-autofill:focus {
 .light .ProseMirror p.is-editor-empty:first-child::before {
   color: #94a3b8 !important;
 }
+
+/* General hover:text-white override in light mode */
+.light .hover\:text-white:hover {
+  color: #0f172a !important;
+}
+
+/* Topic tabs styling overrides in light mode */
+.light .topic-tabs-container button.text-white {
+  color: var(--foreground) !important;
+}
+
+.light .topic-tabs-container button {
+  color: var(--muted) !important;
+}
+
+.light .topic-tabs-container button:hover {
+  color: var(--foreground) !important;
+}

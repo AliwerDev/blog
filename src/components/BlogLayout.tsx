@@ -113,7 +113,7 @@ export default function BlogLayout({
 
       {/* Topics Filter Tabs */}
       <div className="flex overflow-x-auto pb-4 mb-8 -mx-4 px-4 scrollbar-none">
-        <div className="flex gap-2 bg-zinc-950 p-1 rounded-2xl border border-zinc-900/80">
+        <div className="flex gap-2 bg-zinc-950 p-1 rounded-2xl border border-zinc-900/80 topic-tabs-container">
           {topicsData.map((topic) => {
             const isActive = selectedTopic === topic.id;
             return (
