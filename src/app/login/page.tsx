@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Lock, Mail, Loader2, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+import ThemeToggle from '@/components/ThemeToggle';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -74,6 +75,11 @@ export default function LoginPage() {
 
   return (
     <div className="relative min-h-screen flex items-center justify-center p-4">
+      {/* Absolute floating theme toggle */}
+      <div className="absolute top-4 right-4 z-20">
+        <ThemeToggle />
+      </div>
+
       {/* Ambient gradient glow */}
       <div className="glow-bg" />
 

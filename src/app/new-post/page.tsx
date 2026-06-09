@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { Loader2, ArrowLeft, Save } from 'lucide-react';
 import Link from 'next/link';
 import topicsData from '@/config/topics.json';
+import ThemeToggle from '@/components/ThemeToggle';
 
 // Helper to convert plain text to HTML paragraphs
 function toHtml(text: string): string {
@@ -199,9 +200,12 @@ function NewPostForm() {
             <ArrowLeft className="h-4.5 w-4.5 transform group-hover:-translate-x-1 transition-transform" />
             Orqaga qaytish
           </Link>
-          <h1 className="text-xl font-bold font-display text-white">
-            {editId ? 'Postni tahrirlash' : 'Yangi post yaratish'}
-          </h1>
+          <div className="flex items-center gap-4">
+            <h1 className="text-xl font-bold font-display text-white">
+              {editId ? 'Postni tahrirlash' : 'Yangi post yaratish'}
+            </h1>
+            <ThemeToggle />
+          </div>
         </div>
 
         {error && (

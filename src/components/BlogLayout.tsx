@@ -4,6 +4,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, LogIn, LogOut, Tag, Calendar, ChevronRight } from 'lucide-react';
 import topicsData from '@/config/topics.json';
+import ThemeToggle from './ThemeToggle';
 
 interface Post {
   id: string;
@@ -104,6 +105,7 @@ export default function BlogLayout({
               </button>
             </>
           )}
+          <ThemeToggle />
         </div>
       </header>
 

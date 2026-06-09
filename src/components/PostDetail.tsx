@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Edit, Trash2, Calendar, Tag, Loader2 } from 'lucide-react';
 import topicsData from '@/config/topics.json';
+import ThemeToggle from './ThemeToggle';
 
 interface Post {
   id: string;
@@ -84,29 +85,32 @@ export default function PostDetail({ post, isAdmin, onBack, onEdit, onDeleteSucc
           Orqaga qaytish
         </button>
 
-        {isAdmin && (
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => onEdit(post)}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-zinc-900 border border-zinc-800 hover:border-zinc-700 px-3.5 py-1.5 text-xs font-semibold text-zinc-300 hover:text-white transition-all cursor-pointer"
-            >
-              <Edit className="h-3.5 w-3.5 text-purple-400" />
-              Tahrirlash
-            </button>
-            <button
-              onClick={handleDelete}
-              disabled={deleting}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-rose-500/10 border border-rose-500/20 hover:border-rose-500/40 px-3.5 py-1.5 text-xs font-semibold text-rose-400 hover:text-rose-300 disabled:opacity-50 transition-all cursor-pointer"
-            >
-              {deleting ? (
-                <Loader2 className="h-3.5 w-3.5 animate-spin" />
-              ) : (
-                <Trash2 className="h-3.5 w-3.5" />
-              )}
-              O&apos;chirish
-            </button>
-          </div>
-        )}
+        <div className="flex items-center gap-3">
+          {isAdmin && (
+            <>
+              <button
+                onClick={() => onEdit(post)}
+                className="inline-flex items-center gap-1.5 rounded-lg bg-zinc-900 border border-zinc-800 hover:border-zinc-700 px-3.5 py-1.5 text-xs font-semibold text-zinc-300 hover:text-white transition-all cursor-pointer"
+              >
+                <Edit className="h-3.5 w-3.5 text-purple-400" />
+                Tahrirlash
+              </button>
+              <button
+                onClick={handleDelete}
+                disabled={deleting}
+                className="inline-flex items-center gap-1.5 rounded-lg bg-rose-500/10 border border-rose-500/20 hover:border-rose-500/40 px-3.5 py-1.5 text-xs font-semibold text-rose-400 hover:text-rose-300 disabled:opacity-50 transition-all cursor-pointer"
+              >
+                {deleting ? (
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                ) : (
+                  <Trash2 className="h-3.5 w-3.5" />
+                )}
+                O&apos;chirish
+              </button>
+            </>
+          )}
+          <ThemeToggle />
+        </div>
       </div>
 
       {error && (

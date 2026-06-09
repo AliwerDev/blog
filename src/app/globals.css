@@ -2,9 +2,20 @@
 
 @import "tailwindcss";
 
+@theme {
+  --color-zinc-950: var(--background);
+  --color-zinc-900: var(--card);
+  --color-zinc-800: var(--card-border);
+  --color-zinc-700: var(--card-border);
+  --color-zinc-500: var(--muted);
+  --color-zinc-400: var(--muted);
+  --color-zinc-300: var(--foreground-dim);
+}
+
 :root {
   --background: #09090b;
   --foreground: #f4f4f5;
+  --foreground-dim: #d4d4d8;
   --card: #121214;
   --card-border: rgba(255, 255, 255, 0.08);
   --accent: #a855f7; /* Purple */
@@ -14,6 +25,18 @@
   
   --font-sans: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-display: 'Nunito Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.light {
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --foreground-dim: #334155;
+  --card: #ffffff;
+  --card-border: rgba(15, 23, 42, 0.08);
+  --accent: #8b5cf6; /* Indigo/Purple */
+  --accent-glow: rgba(139, 92, 246, 0.1);
+  --muted: #64748b;
+  --muted-light: #f1f5f9;
 }
 
 body {
@@ -172,4 +195,99 @@ input:-webkit-autofill:focus {
   -webkit-text-fill-color: #ffffff;
   -webkit-box-shadow: 0 0 0px 1000px #18181b inset;
   transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Light mode specific classes and overrides */
+.light .glass {
+  background: rgba(255, 255, 255, 0.75) !important;
+  box-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.04) !important;
+}
+
+.light .glass-hover:hover {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border-color: rgba(139, 92, 246, 0.3) !important;
+  box-shadow: 0 15px 35px -10px rgba(139, 92, 246, 0.12) !important;
+}
+
+.light .glow-bg {
+  background: 
+    radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.05) 0%, transparent 45%),
+    radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.04) 0%, transparent 45%) !important;
+}
+
+/* Scrollbar in light mode */
+.light ::-webkit-scrollbar-track {
+  background: #f8fafc;
+}
+.light ::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+}
+.light ::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Input, select, textarea styling in light mode */
+.light input, .light select, .light textarea {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #e2e8f0 !important;
+}
+
+.light input:focus, .light select:focus, .light textarea:focus {
+  border-color: #8b5cf6 !important;
+  --tw-ring-color: #8b5cf6 !important;
+}
+
+.light input::placeholder, .light textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* Hide autofill yellow background in inputs - Light Mode */
+.light input:-webkit-autofill,
+.light input:-webkit-autofill:hover, 
+.light input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #0f172a !important;
+  -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important;
+}
+
+/* Text overrides to make sure text is dark in light mode */
+.light h1, .light h2, .light h3, .light h4, .light h5, .light h6,
+.light .text-white:not(button, button *, .bg-gradient-to-r, .bg-gradient-to-r *, .bg-purple-600, .bg-rose-500, a) {
+  color: #0f172a !important;
+}
+
+.light .hover\:text-white:hover:not(button *, .bg-gradient-to-r *) {
+  color: #0f172a !important;
+}
+
+/* Prose (rich text content) overrides in light mode */
+.light .prose {
+  color: #334155 !important;
+}
+
+.light .prose h1, .light .prose h2, .light .prose h3, .light .prose h4 {
+  color: #0f172a !important;
+}
+
+.light .prose blockquote {
+  color: #475569 !important;
+}
+
+.light .prose pre {
+  background-color: #f1f5f9 !important;
+  border-color: #e2e8f0 !important;
+}
+
+.light .prose pre code {
+  color: #0f172a !important;
+}
+
+.light .prose code {
+  background-color: #f1f5f9 !important;
+  color: #db2777 !important;
+}
+
+/* Tiptap editor empty placeholder color */
+.light .ProseMirror p.is-editor-empty:first-child::before {
+  color: #94a3b8 !important;
 }
