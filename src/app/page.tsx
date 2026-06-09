@@ -2,9 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { AnimatePresence, motion } from 'framer-motion';
 import BlogLayout from '@/components/BlogLayout';
-import PostDetail from '@/components/PostDetail';
 import { Loader2 } from 'lucide-react';
 import type { Post } from '@/lib/db';
 
@@ -12,7 +10,6 @@ export default function Home() {
   const router = useRouter();
   const [posts, setPosts] = useState<Post[]>([]);
   const [selectedTopic, setSelectedTopic] = useState('all');
-  const [selectedPost, setSelectedPost] = useState<Post | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -68,8 +65,8 @@ export default function Home() {
     }
   };
 
-  const handleEditClick = (post: Post) => {
-    router.push(`/new-post?edit=${post.id}`);
+  const handleSelectPost = (post: Post) => {
+    router.push(`/post/${post.id}`);
   };
 
   const handleNewPostClick = () => {
@@ -89,50 +86,18 @@ export default function Home() {
           </div>
         ) : (
           <div className="w-full">
-            <AnimatePresence mode="wait">
-              {!selectedPost ? (
-                <motion.div
-                  key="list"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <BlogLayout
-                    posts={posts}
-                    selectedTopic={selectedTopic}
-                    onSelectTopic={setSelectedTopic}
-                    onSelectPost={setSelectedPost}
-                    isAdmin={isAdmin}
-                    onLogoutClick={handleLogout}
-                    onNewPostClick={handleNewPostClick}
-                  />
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="detail"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <PostDetail
-                    post={selectedPost}
-                    isAdmin={isAdmin}
-                    onBack={() => setSelectedPost(null)}
-                    onEdit={handleEditClick}
-                    onDeleteSuccess={() => {
-                      setSelectedPost(null);
-                      fetchPosts();
-                    }}
-                  />
-                </motion.div>
-              )}
-            </AnimatePresence>
+            <BlogLayout
+              posts={posts}
+              selectedTopic={selectedTopic}
+              onSelectTopic={setSelectedTopic}
+              onSelectPost={handleSelectPost}
+              isAdmin={isAdmin}
+              onLogoutClick={handleLogout}
+              onNewPostClick={handleNewPostClick}
+            />
           </div>
         )}
       </main>
-
     </div>
   );
 }
