@@ -32,7 +32,13 @@ async function fetchFromKv(): Promise<Post[]> {
     if (!res.ok) return [];
     const data = await res.json();
     if (!data.result) return [];
-    return JSON.parse(data.result) as Post[];
+    
+    // Parse result. If it's a string, it was double-stringified, so parse again.
+    let parsed = JSON.parse(data.result);
+    if (typeof parsed === 'string') {
+      parsed = JSON.parse(parsed);
+    }
+    return (Array.isArray(parsed) ? parsed : []) as Post[];
   } catch (error) {
     console.error('Vercel KV o\'qishda xatolik:', error);
     return [];
@@ -48,7 +54,7 @@ async function saveToKv(posts: Post[]): Promise<void> {
         Authorization: `Bearer ${process.env.KV_REST_API_TOKEN}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(JSON.stringify(posts)),
+      body: JSON.stringify(posts), // Single stringify
     });
     if (!res.ok) {
       throw new Error('KV yozishda xatolik yuz berdi');
