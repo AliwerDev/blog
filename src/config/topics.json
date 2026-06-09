@@ -1,0 +1,7 @@
+[
+  { "id": "all", "label": "All Stories" },
+  { "id": "tech", "label": "Technology" },
+  { "id": "design", "label": "Design" },
+  { "id": "thoughts", "label": "Thoughts" },
+  { "id": "coding", "label": "Coding" }
+]

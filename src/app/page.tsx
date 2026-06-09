@@ -1,65 +1,200 @@
-import Image from "next/image";
+'use client';
+
+import React, { useEffect, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import BlogLayout from '@/components/BlogLayout';
+import PostDetail from '@/components/PostDetail';
+import AuthModal from '@/components/AuthModal';
+import PostEditor from '@/components/PostEditor';
+import { Loader2 } from 'lucide-react';
+
+interface Post {
+  id: string;
+  title: string;
+  content: string;
+  previewText: string;
+  topicId: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
 export default function Home() {
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [selectedTopic, setSelectedTopic] = useState('all');
+  const [selectedPost, setSelectedPost] = useState<Post | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isEditorOpen, setIsEditorOpen] = useState(false);
+  const [editingPost, setEditingPost] = useState<Post | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch posts from API
+  const fetchPosts = async () => {
+    try {
+      const res = await fetch('/api/posts');
+      if (res.ok) {
+        const data = await res.json();
+        setPosts(data);
+      }
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Check admin session status
+  const checkAuth = async () => {
+    try {
+      const res = await fetch('/api/auth');
+      if (res.ok) {
+        const data = await res.json();
+        setIsAdmin(data.authenticated);
+      } else {
+        setIsAdmin(false);
+      }
+    } catch {
+      setIsAdmin(false);
+    }
+  };
+
+  useEffect(() => {
+    const init = async () => {
+      // Defer API calls to run asynchronously after initial mount completes
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fetchPosts();
+      checkAuth();
+    };
+    init();
+  }, []);
+
+  // Handle logout
+  const handleLogout = async () => {
+    try {
+      const res = await fetch('/api/auth', { method: 'DELETE' });
+      if (res.ok) {
+        setIsAdmin(false);
+        // If viewing detailed view as admin, close editor just in case
+        setIsEditorOpen(false);
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
+
+  const handleEditClick = (post: Post) => {
+    setEditingPost(post);
+    setIsEditorOpen(true);
+  };
+
+  const handleNewPostClick = () => {
+    setEditingPost(null);
+    setIsEditorOpen(true);
+  };
+
+  const handlePostSaved = () => {
+    fetchPosts();
+    // If we were editing a post, update the selected post detail view as well
+    if (selectedPost) {
+      const updated = posts.find(p => p.id === selectedPost.id);
+      if (updated) {
+        // Refetch to get the freshest data
+        fetch(`/api/posts`)
+          .then(res => res.json())
+          .then(data => {
+            const freshPost = data.find((p: Post) => p.id === selectedPost.id);
+            if (freshPost) setSelectedPost(freshPost);
+          });
+      }
+    }
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+    <div className="relative min-h-screen px-4 py-8 md:py-16">
+      {/* Dynamic ambient gradient glow */}
+      <div className="glow-bg" />
+
+      <main className="relative z-10">
+        {loading ? (
+          <div className="flex flex-col items-center justify-center py-40">
+            <Loader2 className="h-10 w-10 text-purple-500 animate-spin" />
+            <p className="text-zinc-500 text-sm mt-4">Yuklanmoqda...</p>
+          </div>
+        ) : (
+          <div className="w-full">
+            <AnimatePresence mode="wait">
+              {!selectedPost ? (
+                <motion.div
+                  key="list"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <BlogLayout
+                    posts={posts}
+                    selectedTopic={selectedTopic}
+                    onSelectTopic={setSelectedTopic}
+                    onSelectPost={setSelectedPost}
+                    isAdmin={isAdmin}
+                    onLoginClick={() => setIsAuthModalOpen(true)}
+                    onLogoutClick={handleLogout}
+                    onNewPostClick={handleNewPostClick}
+                  />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="detail"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <PostDetail
+                    post={selectedPost}
+                    isAdmin={isAdmin}
+                    onBack={() => setSelectedPost(null)}
+                    onEdit={handleEditClick}
+                    onDeleteSuccess={() => {
+                      setSelectedPost(null);
+                      fetchPosts();
+                    }}
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        )}
       </main>
+
+      {/* Auth Modal Overlay */}
+      <AnimatePresence>
+        {isAuthModalOpen && (
+          <AuthModal
+            isOpen={isAuthModalOpen}
+            onClose={() => setIsAuthModalOpen(false)}
+            onSuccess={() => {
+              setIsAdmin(true);
+            }}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Post Editor Overlay */}
+      <AnimatePresence>
+        {isEditorOpen && (
+          <PostEditor
+            isOpen={isEditorOpen}
+            onClose={() => {
+              setIsEditorOpen(false);
+              setEditingPost(null);
+            }}
+            onSave={handlePostSaved}
+            post={editingPost}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
