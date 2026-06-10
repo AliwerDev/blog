@@ -1,4 +1,3 @@
-import { Calendar } from "lucide-react";
 import TagBadge from "@/components/ui/TagBadge";
 import { formatDate } from "@/lib/utils";
 import { Post } from "@/types";
