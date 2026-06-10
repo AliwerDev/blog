@@ -43,13 +43,13 @@ export default function HomeClient({ initialPosts, isAdmin }: HomeClientProps) {
       <Header isAdmin={isAdmin} />
 
       {/* Dynamic Tags Filter Tabs */}
-      <div className="flex flex-wrap gap-2.5 mb-8 topic-tabs-container">
+      <div className="flex flex-wrap gap-2 mb-8 topic-tabs-container select-none">
         <button
           onClick={() => setSelectedTopic('all')}
-          className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold tracking-wide transition-all cursor-pointer border ${
+          className={`px-3 py-1 rounded-none text-[11px] font-bold font-mono uppercase tracking-wider transition-all cursor-pointer border ${
             selectedTopic === 'all'
-              ? 'bg-[var(--accent)]/10 border-[var(--accent)]/40 text-[var(--accent)] font-bold shadow-sm'
-              : 'bg-zinc-900/40 border-zinc-800/60 text-zinc-400 hover:text-zinc-200'
+              ? 'bg-[var(--foreground)] border-[var(--foreground)] text-white'
+              : 'bg-transparent border-zinc-300 text-zinc-550 hover:bg-zinc-100 hover:text-black'
           }`}
         >
           #barchasi
@@ -60,10 +60,10 @@ export default function HomeClient({ initialPosts, isAdmin }: HomeClientProps) {
             <button
               key={tag}
               onClick={() => setSelectedTopic(tag)}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold tracking-wide transition-all cursor-pointer border ${
+              className={`px-3 py-1 rounded-none text-[11px] font-bold font-mono uppercase tracking-wider transition-all cursor-pointer border ${
                 isActive
-                  ? 'bg-[var(--accent)]/10 border-[var(--accent)]/40 text-[var(--accent)] font-bold shadow-sm'
-                  : 'bg-zinc-900/40 border-zinc-800/60 text-zinc-400 hover:text-zinc-200'
+                  ? 'bg-[var(--foreground)] border-[var(--foreground)] text-white'
+                  : 'bg-transparent border-zinc-300 text-zinc-550 hover:bg-zinc-100 hover:text-black'
               }`}
             >
               #{tag}

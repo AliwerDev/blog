@@ -19,29 +19,35 @@ export default function PostDetailContent({ post }: PostDetailContentProps) {
   };
 
   return (
-    <article className="glass rounded-2xl p-6 md:p-10 shadow-xl border border-zinc-800/60 max-w-5xl mx-auto">
-      <div className="flex flex-wrap items-center gap-4 text-xs text-zinc-400 mb-6">
-        <div className="flex flex-wrap gap-2">
-          {getPostTags(post).map((tag) => (
-            <TagBadge key={tag} tag={tag} />
-          ))}
-        </div>
-        <div className="inline-flex items-center gap-1.5 text-zinc-500">
-          <Calendar className="h-3.5 w-3.5" />
+    <article className="bg-white border border-zinc-200/80 rounded-none p-6 md:p-12 max-w-4xl mx-auto shadow-none">
+      {/* Newspaper Article Headline */}
+      <h1 className="text-3xl md:text-4xl lg:text-5xl font-black font-display text-[var(--foreground)] tracking-tight text-center mb-6 leading-tight">
+        {post.title}
+      </h1>
+
+      {/* Article Metadata Bar */}
+      <div className="flex flex-wrap items-center justify-center gap-4 text-xs font-sans text-zinc-550 border-y border-zinc-200 py-3 mb-10 select-none">
+        <span className="font-mono uppercase text-zinc-400 tracking-wider">
+          Chop etilgan:
+        </span>
+        <span className="font-bold text-[var(--foreground)]">
           {formatDate(post.createdAt, {
             day: "numeric",
             month: "long",
             year: "numeric",
           })}
+        </span>
+        <span className="text-zinc-300">•</span>
+        <div className="flex flex-wrap gap-1.5">
+          {getPostTags(post).map((tag) => (
+            <TagBadge key={tag} tag={tag} />
+          ))}
         </div>
       </div>
 
-      <h1 className="text-3xl md:text-4xl font-extrabold font-display text-white tracking-tight mb-8 leading-tight">
-        {post.title}
-      </h1>
-
+      {/* Article Body Content */}
       <div
-        className="prose max-w-none text-zinc-300"
+        className="prose max-w-none text-zinc-800 font-serif leading-relaxed text-base md:text-lg"
         dangerouslySetInnerHTML={{ __html: post.content }}
       />
     </article>

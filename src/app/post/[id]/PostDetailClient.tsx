@@ -54,12 +54,12 @@ export default function PostDetailClient({ post, isAdmin }: PostDetailClientProp
           className="w-full"
         >
           {/* Navigation and Actions Bar */}
-          <div className="flex items-center justify-between mb-8 border-b border-zinc-800/80 pb-4">
+          <div className="flex items-center justify-between mb-8 border-b border-zinc-200 pb-4 select-none">
             <Link
               href="/"
-              className="inline-flex items-center gap-2 text-zinc-400 hover:text-white transition-colors group text-sm font-medium"
+              className="inline-flex items-center gap-2 text-zinc-500 hover:text-black transition-colors group text-xs font-mono uppercase tracking-wider"
             >
-              <ArrowLeft className="h-4.5 w-4.5 transform group-hover:-translate-x-1 transition-transform" />
+              <ArrowLeft className="h-3.5 w-3.5 transform group-hover:-translate-x-1 transition-transform" />
               Orqaga qaytish
             </Link>
 
@@ -68,15 +68,15 @@ export default function PostDetailClient({ post, isAdmin }: PostDetailClientProp
                 <>
                   <Link
                     href={`/new-post?edit=${post.id}`}
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-zinc-900 border border-zinc-800 hover:border-zinc-700 px-3.5 py-1.5 text-xs font-semibold text-zinc-300 hover:text-white transition-all"
+                    className="inline-flex items-center gap-1.5 rounded-none bg-[var(--foreground)] hover:bg-zinc-800 border border-[var(--foreground)] px-3.5 py-1.5 text-xs font-bold text-white transition-all uppercase tracking-wider"
                   >
-                    <Edit className="h-3.5 w-3.5 text-purple-400" />
+                    <Edit className="h-3.5 w-3.5" />
                     Tahrirlash
                   </Link>
                   <button
                     onClick={handleDelete}
                     disabled={isPending}
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-rose-500/10 border border-rose-500/20 hover:border-rose-500/40 px-3.5 py-1.5 text-xs font-semibold text-rose-400 hover:text-rose-300 disabled:opacity-50 transition-all cursor-pointer"
+                    className="inline-flex items-center gap-1.5 rounded-none bg-transparent hover:bg-rose-50 border border-rose-250 px-3.5 py-1.5 text-xs font-bold text-rose-600 hover:text-rose-700 disabled:opacity-50 transition-all cursor-pointer uppercase tracking-wider"
                   >
                     {isPending ? (
                       <Loader2 className="h-3.5 w-3.5 animate-spin" />

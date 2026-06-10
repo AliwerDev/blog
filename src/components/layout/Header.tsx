@@ -1,8 +1,7 @@
 'use client';
 
-import React, { useTransition } from 'react';
+import React, { useTransition, useState, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import { Plus, LogOut, Loader2 } from 'lucide-react';
 import { logoutAction } from '@/lib/actions/auth-actions';
 
@@ -12,9 +11,19 @@ interface HeaderProps {
 
 export default function Header({ isAdmin }: HeaderProps) {
   const [isPending, startTransition] = useTransition();
-  const pathname = usePathname();
+  const [dateStr, setDateStr] = useState('');
 
-  const isBlogActive = pathname === '/';
+  useEffect(() => {
+    const today = new Date();
+    setDateStr(
+      today.toLocaleDateString('uz-UZ', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      })
+    );
+  }, []);
 
   const handleLogout = () => {
     if (confirm('Tizimdan chiqmoqchimisiz?')) {
@@ -25,53 +34,49 @@ export default function Header({ isAdmin }: HeaderProps) {
   };
 
   return (
-    <header className="flex items-center justify-between py-6 mb-12 border-b border-zinc-800/80">
-      <div className="flex items-center gap-6 md:gap-10">
-        <Link href="/" className="flex items-center gap-2 group">
-          <span className="text-xl font-bold font-display tracking-tight text-[var(--foreground)] group-hover:text-[var(--foreground-dim)] transition-colors">
-            alisher<span className="text-[var(--muted)] font-normal group-hover:text-[var(--foreground-dim)] transition-colors">.blog</span>
+    <header className="w-full mb-12 flex flex-col items-center">
+      {/* Title Masthead */}
+      <div className="w-full text-center py-4 relative">
+        <Link href="/" className="inline-block group select-none">
+          <span className="text-4xl sm:text-5xl md:text-6xl font-black font-display tracking-tight text-[var(--foreground)] group-hover:text-zinc-600 transition-colors uppercase block">
+            alisher<span className="text-zinc-400 font-light group-hover:text-zinc-500 transition-colors">.blog</span>
           </span>
         </Link>
+      </div>
 
-        <nav className="flex items-center gap-5 text-sm">
+      {/* Newspaper Dateline with double border */}
+      <div className="w-full border-double-y py-2.5 my-2 flex flex-col sm:flex-row items-center justify-between text-[10px] md:text-xs font-sans text-zinc-500 uppercase tracking-widest gap-2 select-none">
+        <span className="sm:w-1/3 text-center sm:text-left font-medium">Toshkent, UZ</span>
+        <span className="sm:w-1/3 text-center font-bold text-[var(--foreground)]">
+          {dateStr || 'KUNLIK NASHR'}
+        </span>
+        <span className="sm:w-1/3 text-center sm:text-right font-medium">Mustaqil Blog</span>
+      </div>
+
+      {/* Admin Actions Bar */}
+      {isAdmin && (
+        <div className="w-full flex items-center justify-end gap-3 pt-2 text-sm">
           <Link
-            href="/"
-            className={`transition-colors duration-200 ${
-              isBlogActive 
-                ? 'text-[var(--accent)] font-bold' 
-                : 'text-zinc-400 hover:text-zinc-200 font-medium'
-            }`}
+            href="/new-post"
+            className="inline-flex items-center gap-1.5 bg-[var(--foreground)] hover:bg-zinc-800 px-3.5 py-1.5 text-xs font-bold text-white transition-all cursor-pointer uppercase tracking-wider border border-[var(--foreground)]"
           >
-            Blog
+            <Plus className="h-3.5 w-3.5" />
+            Yangi post
           </Link>
-        </nav>
-      </div>
-
-      <div className="flex items-center gap-3">
-        {isAdmin && (
-          <>
-            <Link
-              href="/new-post"
-              className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-purple-500/10 hover:shadow-purple-500/20 transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-black"
-            >
-              <Plus className="h-4.5 w-4.5" />
-              Yangi post
-            </Link>
-            <button
-              onClick={handleLogout}
-              disabled={isPending}
-              className="inline-flex items-center gap-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 px-4 py-2 text-sm font-semibold text-zinc-300 hover:text-white disabled:opacity-50 transition-all cursor-pointer focus:outline-none focus:ring-1 focus:ring-purple-500"
-            >
-              {isPending ? (
-                <Loader2 className="h-4.5 w-4.5 animate-spin" />
-              ) : (
-                <LogOut className="h-4.5 w-4.5 text-zinc-400 group-hover:text-white" />
-              )}
-              Chiqish
-            </button>
-          </>
-        )}
-      </div>
+          <button
+            onClick={handleLogout}
+            disabled={isPending}
+            className="inline-flex items-center gap-1.5 bg-transparent hover:bg-zinc-100 border border-zinc-300 px-3.5 py-1.5 text-xs font-bold text-zinc-700 hover:text-black disabled:opacity-50 transition-all cursor-pointer uppercase tracking-wider"
+          >
+            {isPending ? (
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            ) : (
+              <LogOut className="h-3.5 w-3.5" />
+            )}
+            Chiqish
+          </button>
+        </div>
+      )}
     </header>
   );
 }
