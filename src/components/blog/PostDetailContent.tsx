@@ -26,7 +26,7 @@ export default function PostDetailContent({ post }: PostDetailContentProps) {
       </h1>
 
       {/* Article Metadata Bar */}
-      <div className="flex flex-wrap items-center justify-center gap-4 text-xs font-sans text-zinc-550 border-y border-zinc-200 py-3 mb-10 select-none">
+      <div className="flex flex-wrap items-center justify-center gap-4 text-xs font-sans text-[var(--muted)] border-y border-zinc-200 py-3 mb-10 select-none">
         <span className="font-mono uppercase text-zinc-400 tracking-wider">
           Chop etilgan:
         </span>

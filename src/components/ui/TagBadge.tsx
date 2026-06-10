@@ -7,8 +7,8 @@ interface TagBadgeProps {
 }
 
 export default function TagBadge({ tag, onClick, interactive = false }: TagBadgeProps) {
-  const baseClasses = "inline-flex items-center bg-zinc-100/80 border border-zinc-300 px-2 py-0.5 rounded-none text-zinc-700 font-mono text-[10px] font-bold uppercase tracking-wider select-none";
-  const hoverClasses = interactive && onClick ? "hover:bg-zinc-200 hover:border-zinc-400 hover:text-black transition-all cursor-pointer" : "";
+  const baseClasses = "inline-flex items-center bg-[var(--muted-light)] border border-[var(--card-border)] px-2 py-0.5 rounded-none text-[var(--foreground-dim)] font-mono text-[10px] font-bold uppercase tracking-wider select-none";
+  const hoverClasses = interactive && onClick ? "hover:bg-[var(--foreground)] hover:text-[var(--background)] transition-all cursor-pointer" : "";
 
   return (
     <span 

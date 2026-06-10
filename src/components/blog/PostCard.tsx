@@ -38,7 +38,7 @@ export default function PostCard({ post, variants, isFeatured = false }: PostCar
       
       <div className="relative z-20 pointer-events-none">
         {/* Card Meta - Newspaper Style */}
-        <div className="flex flex-wrap items-center gap-3 text-xs font-sans text-zinc-550 mb-3">
+        <div className="flex flex-wrap items-center gap-3 text-xs font-sans text-[var(--muted)] mb-3">
           <div className="flex flex-wrap gap-1.5 pointer-events-auto">
             {getPostTags(post).map((tag) => (
               <TagBadge key={tag} tag={tag} />

@@ -38,7 +38,7 @@ export default function Header({ isAdmin }: HeaderProps) {
       {/* Title Masthead */}
       <div className="w-full text-center py-4 relative">
         <Link href="/" className="inline-block group select-none">
-          <span className="text-4xl sm:text-5xl md:text-6xl font-black font-display tracking-tight text-[var(--foreground)] group-hover:text-zinc-600 transition-colors uppercase block">
+          <span className="text-2xl sm:text-3.5xl md:text-4xl font-black font-display tracking-tight text-[var(--foreground)] group-hover:text-zinc-650 transition-colors uppercase block">
             alisher<span className="text-zinc-400 font-light group-hover:text-zinc-500 transition-colors">.blog</span>
           </span>
         </Link>
