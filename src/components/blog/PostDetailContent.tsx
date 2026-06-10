@@ -18,7 +18,7 @@ export default function PostDetailContent({ post }: PostDetailContentProps) {
   };
 
   return (
-    <article className="bg-white border border-zinc-200/80 rounded-none p-6 md:p-12 max-w-4xl mx-auto shadow-none">
+    <article className="bg-white border border-zinc-200/80 rounded-none p-6 md:p-12 max-w-5xl mx-auto shadow-none">
       {/* Newspaper Article Headline */}
       <h1 className="text-3xl md:text-4xl lg:text-5xl font-black font-display text-[var(--foreground)] tracking-tight text-center mb-6 leading-tight">
         {post.title}
