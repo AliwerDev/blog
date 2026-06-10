@@ -15,14 +15,35 @@ export default function Header({ isAdmin }: HeaderProps) {
 
   useEffect(() => {
     const today = new Date();
-    setDateStr(
-      today.toLocaleDateString('uz-UZ', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      })
-    );
+    const weekdays = [
+      "yakshanba",
+      "dushanba",
+      "seshanba",
+      "chorshanba",
+      "payshanba",
+      "juma",
+      "shanba",
+    ];
+    const months = [
+      "yanvar",
+      "fevral",
+      "mart",
+      "aprel",
+      "may",
+      "iyun",
+      "iyul",
+      "avgust",
+      "sentabr",
+      "oktabr",
+      "noyabr",
+      "dekabr",
+    ];
+    const weekday = weekdays[today.getDay()];
+    const day = today.getDate();
+    const month = months[today.getMonth()];
+    const year = today.getFullYear();
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setDateStr(`${weekday}, ${day}-${month}, ${year}-yil`);
   }, []);
 
   const handleLogout = () => {

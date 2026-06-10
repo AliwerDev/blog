@@ -15,15 +15,26 @@ export function cn(...classes: (string | undefined | null | boolean | Record<str
 
 export function formatDate(
   dateStr: string,
-  options: Intl.DateTimeFormatOptions = {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  }
+  options?: Intl.DateTimeFormatOptions
 ) {
   try {
     const date = new Date(dateStr);
-    return date.toLocaleDateString('uz-UZ', options);
+    if (isNaN(date.getTime())) return dateStr;
+
+    const day = date.getDate();
+    const monthIndex = date.getMonth();
+    const year = date.getFullYear();
+
+    const uzMonths = [
+      'yanvar', 'fevral', 'mart', 'aprel', 'may', 'iyun',
+      'iyul', 'avgust', 'sentabr', 'oktabr', 'noyabr', 'dekabr'
+    ];
+
+    if (options && options.month === 'long') {
+      return `${day}-${uzMonths[monthIndex]} ${year}-yil`;
+    }
+    
+    return `${day}-${uzMonths[monthIndex]}, ${year}`;
   } catch {
     return dateStr;
   }
