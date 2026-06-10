@@ -48,7 +48,7 @@ export default function HomeClient({ initialPosts, isAdmin }: HomeClientProps) {
           onClick={() => setSelectedTopic('all')}
           className={`px-3 py-1 rounded-none text-[11px] font-bold font-mono uppercase tracking-wider transition-all cursor-pointer border ${
             selectedTopic === 'all'
-              ? 'bg-[var(--foreground)] border-[var(--foreground)] text-white'
+              ? 'bg-[var(--foreground)] border-[var(--foreground)] text-[var(--background)]'
               : 'bg-transparent border-zinc-300 text-[var(--muted)] hover:bg-zinc-100 hover:text-black'
           }`}
         >
@@ -62,7 +62,7 @@ export default function HomeClient({ initialPosts, isAdmin }: HomeClientProps) {
               onClick={() => setSelectedTopic(tag)}
               className={`px-3 py-1 rounded-none text-[11px] font-bold font-mono uppercase tracking-wider transition-all cursor-pointer border ${
                 isActive
-                  ? 'bg-[var(--foreground)] border-[var(--foreground)] text-white'
+                  ? 'bg-[var(--foreground)] border-[var(--foreground)] text-[var(--background)]'
                   : 'bg-transparent border-zinc-300 text-[var(--muted)] hover:bg-zinc-100 hover:text-black'
               }`}
             >

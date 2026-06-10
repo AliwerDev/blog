@@ -238,15 +238,4 @@ input:-webkit-autofill:focus {
   color: var(--foreground) !important;
 }
 
-/* Topic tabs styling overrides */
-.topic-tabs-container button {
-  color: var(--muted) !important;
-}
 
-.topic-tabs-container button:hover {
-  color: var(--foreground) !important;
-}
-
-.topic-tabs-container button.text-\[var\(--accent\)\] {
-  color: var(--accent) !important;
-}
